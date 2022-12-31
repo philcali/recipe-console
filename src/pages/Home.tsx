@@ -6,7 +6,7 @@ function Home() {
         <>
             <div className="p-5 mb-4 bg-light rounded-3">
                 <Container>
-                    <h1 className="display-3">My Recipes</h1>
+                    <h1 className="display=3">My Recipes</h1>
                     <p>A collection of my recipes that cover food, drinks, and anything else with ingredients.</p>
                 </Container>
             </div>
