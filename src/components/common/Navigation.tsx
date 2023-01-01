@@ -1,11 +1,26 @@
 import { useState } from "react";
 import { Container, Nav, Navbar, Offcanvas } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { authService } from "../../lib/services";
 import logo from '../../logo.svg';
+import { useAuth } from "../auth/AuthContext";
+import { icons } from "./Icons";
 
 function Navigation() {
     const [ expanded, setExpanded ] = useState(false);
-
+    const location = useLocation();
+    const auth = useAuth();
+    const setHrefAndActive = (href: string) => {
+        return {
+            as: Link,
+            to: href,
+            active: location.pathname === href,
+            onClick: () => {
+                setExpanded(false);
+            }
+        };
+    };
+    const text = auth.isLoggedIn() ? 'Dashboard' : 'Home';
     return (
         <Navbar onToggle={setExpanded} expanded={expanded} expand="lg" bg="dark" variant="dark" sticky="top">
             <Container fluid>
@@ -33,8 +48,18 @@ function Navigation() {
                     </Offcanvas.Header>
                     <Offcanvas.Body className="text-white">
                         <Nav className="me-auto">
-                            <Nav.Link as={Link} to="/" active={true}>Home</Nav.Link>
+                            <Nav.Link {...setHrefAndActive(auth.isLoggedIn() ? '/dashboard' : '/')}>{text}</Nav.Link>
                         </Nav>
+                        {auth.isLoggedIn() &&
+                            <Nav>
+                                <Nav.Link href={authService.logoutEndpoint(window.location.origin)}><>{icons.icon('box-arrow-left')}</> <small>Log Out</small></Nav.Link>
+                            </Nav>
+                        }
+                        {!auth.isLoggedIn() &&
+                            <Nav>
+                                <Nav.Link href={authService.loginEndpoint(window.location.origin)}><>{icons.icon('box-arrow-right')}</> <small>Login</small></Nav.Link>
+                            </Nav>
+                        }
                     </Offcanvas.Body>
                 </Navbar.Offcanvas>
             </Container>
