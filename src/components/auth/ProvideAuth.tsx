@@ -1,4 +1,4 @@
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useState } from "react";
+import { PropsWithChildren, useState } from "react";
 import { authService } from "../../lib/services";
 import { sessionStorage } from "../../lib/session";
 import { ClientToken } from "../../lib/session/SessionStorage";
@@ -75,11 +75,11 @@ export function useProvideAuth(): Authorizer {
     }
 }
 
-function ProvideAuth(props: { children: ReactElement<any, string | JSXElementConstructor<any>> | ReactFragment | ReactPortal }) {
+function ProvideAuth({ children }: PropsWithChildren) {
     const auth = useProvideAuth();
     return (
         <AuthContext.Provider value={auth}>
-            { props.children }
+            { children }
         </AuthContext.Provider>
     );
 }

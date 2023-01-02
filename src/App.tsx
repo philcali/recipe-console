@@ -8,6 +8,7 @@ import Logout from './pages/Logout';
 import PrivateRoute from './components/auth/PrivateRoute';
 import Dashboard from './pages/Dashboard';
 import ProvideAuth from './components/auth/ProvideAuth';
+import RecipeMutate from './pages/recipes/RecipeMutate';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Routes>
             <Route path="/" element={<PrivateRoute><Home/></PrivateRoute>}/>
             <Route path="/dashboard" element={<PrivateRoute><Dashboard/></PrivateRoute>}/>
+            <Route path="/recipes/:recipeId" element={<PrivateRoute><RecipeMutate/></PrivateRoute>}/>
             <Route path="/login" element={<Login/>}/>
             <Route path="/logout" element={<Logout/>}/>
           </Routes>
