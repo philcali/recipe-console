@@ -9,6 +9,8 @@ import PrivateRoute from './components/auth/PrivateRoute';
 import Dashboard from './pages/Dashboard';
 import ProvideAuth from './components/auth/ProvideAuth';
 import RecipeMutate from './pages/recipes/RecipeMutate';
+import AlertNotifications from './components/notifications/AlertNotifcations';
+import Notifications from './components/notifications/Notifications';
 
 function App() {
   return (
@@ -16,14 +18,17 @@ function App() {
       <ProvideAuth>
         <Navigation/>
         <main>
-          <Routes>
-            <Route path="/" element={<PrivateRoute><Home/></PrivateRoute>}/>
-            <Route path="/dashboard" element={<PrivateRoute><Dashboard/></PrivateRoute>}/>
-            <Route path="/recipes/:recipeId" element={<PrivateRoute><RecipeMutate/></PrivateRoute>}/>
-            <Route path="/login" element={<Login/>}/>
-            <Route path="/logout" element={<Logout/>}/>
-          </Routes>
-          <Footer/>
+          <AlertNotifications>
+            <Notifications/>
+            <Routes>
+              <Route path="/" element={<PrivateRoute><Home/></PrivateRoute>}/>
+              <Route path="/dashboard" element={<PrivateRoute><Dashboard/></PrivateRoute>}/>
+              <Route path="/recipes/:recipeId" element={<PrivateRoute><RecipeMutate/></PrivateRoute>}/>
+              <Route path="/login" element={<Login/>}/>
+              <Route path="/logout" element={<Logout/>}/>
+            </Routes>
+            <Footer/>
+          </AlertNotifications>
         </main>
       </ProvideAuth>
     </Router>

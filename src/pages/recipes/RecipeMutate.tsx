@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import CancelButton from "../../components/common/CancelButton";
 import Header from "../../components/common/Header";
 import { icons } from "../../components/common/Icons";
+import { useAlerts } from "../../components/notifications/AlertContext";
 import { recipes } from "../../lib/services";
 import { Ingredient, RecipeUpdate } from "../../lib/services/RecipeService";
 
@@ -26,6 +27,7 @@ interface RecipeFormData extends RecipeUpdate {
 
 function RecipeMutate() {
     const navigate = useNavigate();
+    const alerts = useAlerts();
     const { recipeId } = useParams();
     const defaultData: RecipeFormData = {
         loading: recipeId !== 'new',
@@ -56,7 +58,8 @@ function RecipeMutate() {
                         });
                     }
                 })
-                .catch(() => {
+                .catch(err => {
+                    alerts.error(`Failed to load recipe ${recipeId}: ${err.message}`);
                     if (isMounted) {
                         setData({
                             ...data,
@@ -90,6 +93,7 @@ function RecipeMutate() {
                 recipes.update(recipeId, data);
             mutate
                 .then(updated => {
+                    alerts.success(`Successfully ${recipeId === 'new' ? 'created' : 'updated'} ${updated.name}.`);
                     setData({
                         ...data,
                         ...updated,
@@ -97,7 +101,8 @@ function RecipeMutate() {
                         validated: false,
                     });
                     navigate('/dashboard');
-                }).catch(_ => {
+                }).catch(err => {
+                    alerts.error(`Failed to update ${data.name}: ${err.message}.`);
                     setData({
                         ...data,
                         submitting: false,

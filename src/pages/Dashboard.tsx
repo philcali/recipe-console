@@ -3,6 +3,7 @@ import { Button, Container, Modal, Spinner, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/common/Header";
 import { icons } from "../components/common/Icons";
+import { useAlerts } from "../components/notifications/AlertContext";
 import { formatDate, formatTime } from "../lib/format";
 import { recipes } from "../lib/services";
 import { QueryResults, Recipe } from "../lib/services/RecipeService";
@@ -16,6 +17,7 @@ interface LoadingRecipes extends QueryResults<Recipe> {
 
 // Needs to move to a list view, but I'm moving quick
 function RecipeTable() {
+    const alerts = useAlerts();
     const defaultResults: LoadingRecipes = {
         items: [],
         nextToken: undefined,
@@ -38,7 +40,16 @@ function RecipeTable() {
                             loading: (ls.nextToken !== undefined && ls.nextToken !== null)
                         });
                     }
-                });
+                })
+                .catch(err => {
+                    alerts.error(`Failed to list recipes: ${err.message}`);
+                    if (isMounted) {
+                        setResults({
+                            ...results,
+                            loading: false
+                        });
+                    }
+                })
         }
         return () =>{
             isMounted = false
@@ -88,6 +99,7 @@ function RecipeTable() {
             })
             recipes.delete(results.confirmationItem.recipeId)
                 .then(_ => {
+                    alerts.success(`Successfully deleted ${results.confirmationItem?.name}.`);
                     setResults({
                         items: [],
                         nextToken: undefined,
@@ -97,7 +109,8 @@ function RecipeTable() {
                         confirmSubmit: false
                     });
                 })
-                .catch(_ => {
+                .catch(err => {
+                    alerts.error(`Failed to delete ${results.confirmationItem?.name}: ${err.message}`);
                     setResults({
                         ...results,
                         confirmSubmit: false
