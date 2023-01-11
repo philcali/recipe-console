@@ -40,7 +40,8 @@ function RecipeMutate() {
         name: '',
         instructions: '',
         ingredients: [],
-        prepareTimeMinutes: 0
+        prepareTimeMinutes: 0,
+        numberOfServings: 1
     }
     const [ data, setData ] = useState(defaultData);
     const title = recipeId === 'new' ? 'Create Recipe' : `Update ${data.name}`;
@@ -243,6 +244,13 @@ function RecipeMutate() {
                             <Form.Control onChange={updateInput} value={data.prepareTimeMinutes} name="prepareTimeMinutes" required min="1" type="number"/>
                             <Form.Control.Feedback type="invalid">
                                 Please enter a valid preparation time.
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group as={Col} className="mb-3" controlId="numberOfServings">
+                            <Form.Label>Servings</Form.Label>
+                            <Form.Control onChange={updateInput} value={data.numberOfServings} name="numberOfServings" required min="1" type="number"/>
+                            <Form.Control.Feedback type="invalid">
+                                Please enter a valid number of servings.
                             </Form.Control.Feedback>
                         </Form.Group>
                     </Row> 

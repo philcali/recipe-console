@@ -6,7 +6,8 @@ import { icons } from "../components/common/Icons";
 import { useAlerts } from "../components/notifications/AlertContext";
 import { formatDate, formatTime } from "../lib/format";
 import { recipes } from "../lib/services";
-import { QueryResults, Recipe } from "../lib/services/RecipeService";
+import { QueryResults } from "../lib/services/BaseService";
+import { Recipe } from "../lib/services/RecipeService";
 
 interface LoadingRecipes extends QueryResults<Recipe> {
     readonly loading: boolean;
@@ -140,6 +141,7 @@ function RecipeTable() {
                     <tr>
                         <th>Name</th>
                         <th className="text-center">Preparation Time (Minutes)</th>
+                        <th className="text-center">Servings</th>
                         <th className="text-center">Create Time</th>
                         <th className="text-center">Actions</th>
                     </tr>
@@ -150,6 +152,7 @@ function RecipeTable() {
                             <tr key={`recipe-${item.recipeId}`}>
                                 <td>{item.name}</td>
                                 <td className="text-center">{item.prepareTimeMinutes || 'NA'}</td>
+                                <td className="text-center">{item.numberOfServings || 1}</td>
                                 <td className="text-center">{formatDate(item.createTime)} {formatTime(item.createTime)}</td>
                                 <td className="text-center">
                                     <Button onClick={() => navigate(`/recipes/${item.recipeId}`)} variant="outline-secondary" size="sm" className="me-1"><>{icons.icon('pencil')}</></Button>
@@ -161,7 +164,7 @@ function RecipeTable() {
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colSpan={4} className="text-center">
+                        <td colSpan={5} className="text-center">
                             {footer}
                         </td>
                     </tr>
