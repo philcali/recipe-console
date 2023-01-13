@@ -3,18 +3,23 @@ import settings from '../settings.json';
 
 const ENDPOINT = settings.apiEndpoint;
 
+export interface TransferObject {
+    readonly createTime: number;
+    readonly updateTime: number;
+}
+
 export interface QueryParams {
     readonly limit?: number;
     readonly nextToken?: string;
 }
 
-export interface QueryResults<T> {
+export interface QueryResults<T extends TransferObject> {
     readonly items: T[];
     readonly nextToken?: string;
 }
 
 
-export abstract class BaseService<T, I> {
+export abstract class BaseService<T extends TransferObject, I> {
     readonly endpoint: string;
     readonly sessions: SessionStorage;
     readonly resource: string;

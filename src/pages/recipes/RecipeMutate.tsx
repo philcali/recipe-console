@@ -1,28 +1,17 @@
 import React, { FormEvent, useEffect, useState } from "react";
-import { Button, Col, Container, Form, Modal, Row, Table } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import CancelButton from "../../components/common/CancelButton";
 import Header from "../../components/common/Header";
-import { icons } from "../../components/common/Icons";
 import { useAlerts } from "../../components/notifications/AlertContext";
+import IngredientTable from "../../components/resource/IngredientTable";
 import { recipes } from "../../lib/services";
-import { Ingredient, RecipeUpdate } from "../../lib/services/RecipeService";
-
-const DEFAULT_INGREDIENT: Ingredient = {
-    name: '',
-    measurement: '',
-    amount: 0
-}
+import { RecipeUpdate } from "../../lib/services/RecipeService";
 
 interface RecipeFormData extends RecipeUpdate {
     readonly loading: boolean;
     readonly submitting: boolean;
     readonly validated: boolean;
-    readonly mutateIngredient: boolean;
-    readonly confirmation: boolean;
-    readonly confirmationIndex: number;
-    readonly editIndex?: number;
-    readonly ingredient?: Ingredient;
 }
 
 function RecipeMutate() {
@@ -33,9 +22,6 @@ function RecipeMutate() {
         loading: recipeId !== 'new',
         submitting: false,
         validated: false,
-        mutateIngredient: false,
-        confirmation: false,
-        confirmationIndex: 0,
 
         name: '',
         instructions: '',
@@ -101,7 +87,7 @@ function RecipeMutate() {
                         submitting: false,
                         validated: false,
                     });
-                    navigate('/dashboard');
+                    navigate('/recipes');
                 }).catch(err => {
                     alerts.error(`Failed to update ${data.name}: ${err.message}.`);
                     setData({
@@ -113,57 +99,6 @@ function RecipeMutate() {
         }
     };
 
-    function launchMutateIngredient(index?: number): React.MouseEventHandler<HTMLButtonElement> {
-        return event => {
-            setData({
-                ...data,
-                editIndex: index,
-                mutateIngredient: true,
-                ingredient: index !== undefined ? (data.ingredients || [])[index] : DEFAULT_INGREDIENT
-            });
-        };
-    }
-
-    function spliceIngredient(index: number): React.MouseEventHandler<HTMLButtonElement> {
-        return event => {
-            let ingredients = data.ingredients;
-            if (ingredients) {
-                ingredients.splice(index, 1);
-            }
-            setData({
-                ...data,
-                ingredients,
-                confirmation: false,
-                ingredient: undefined
-            });
-        };
-    }
-
-    const launchConfirmationModal = (index: number) => {
-        return () => {
-            setData({
-                ...data,
-                ingredient: (data.ingredients || [])[index],
-                confirmation: true,
-                confirmationIndex: index
-            });
-        };
-    };
-
-    const closeModal = () => {
-        setData({ ...data, mutateIngredient: false, confirmation: false, ingredient: undefined });
-    }
-
-    const updateIngredient: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = event => {
-        setData({
-            ...data,
-            ingredient: {
-                ...(data.ingredient || DEFAULT_INGREDIENT),
-                [event.currentTarget.name]: event.currentTarget.type === 'number' ? parseFloat(event.currentTarget.value) : event.currentTarget.value
-            }
-        });
-    };
-
     const updateInput: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = event => {
         setData({
             ...data,
@@ -171,63 +106,8 @@ function RecipeMutate() {
         });
     };
 
-    const submitIngredient: React.MouseEventHandler<HTMLButtonElement> = event => {
-        let submission = {...data, editIndex: undefined, ingredient: undefined, mutateIngredient: false };
-        if (data.ingredient) {
-            if (submission.ingredients && data.editIndex !== undefined) {
-                submission.ingredients[data.editIndex] = data.ingredient;
-            } else {
-                let ingredients = data.ingredients || [];
-                ingredients.push(data.ingredient);
-                submission = {...submission, ingredients };
-            }
-        }
-        setData(submission);
-    };
-
     return (
         <>
-            <Modal size="lg" show={data.confirmation} onHide={closeModal}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Deleting {data.ingredient?.name}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p>
-                        Are you sure you want to delete <strong>{data.ingredient?.name}</strong>?
-                    </p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={closeModal} variant="outline-secondary">Cancel</Button>
-                    <Button onClick={spliceIngredient(data.confirmationIndex)} variant="danger">Delete</Button>
-                </Modal.Footer>
-            </Modal>
-            <Modal size="lg" show={data.mutateIngredient} onHide={closeModal}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Viewing {data.ingredient?.name}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form>
-                        <Row>
-                            <Form.Group as={Col} controlId="name">
-                                <Form.Label>Name</Form.Label>
-                                <Form.Control onChange={updateIngredient} name="name" value={data.ingredient?.name} placeholder="Name"/>
-                            </Form.Group>
-                            <Form.Group as={Col} controlId="measurement">
-                                <Form.Label>Measurement</Form.Label>
-                                <Form.Control onChange={updateIngredient} name="measurement" value={data.ingredient?.measurement} placeholder="Measurement"/>
-                            </Form.Group>
-                            <Form.Group as={Col} controlId="amount">
-                                <Form.Label>Amount</Form.Label>
-                                <Form.Control onChange={updateIngredient} name="amount" value={data.ingredient?.amount} type="number" min="0" step={0.01}/>
-                            </Form.Group>
-                        </Row>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={closeModal} variant="outline-secondary">Cancel</Button>
-                    <Button onClick={submitIngredient} variant="primary">Submit</Button>
-                </Modal.Footer>
-            </Modal>
             <Container>
                 <Header>{title}</Header>
                 <Form noValidate validated={data.validated} onSubmit={onSubmit}>
@@ -260,40 +140,13 @@ function RecipeMutate() {
                     </Form.Group>
                     <h3>Ingredients</h3>
                     <hr/>
-                    <Table responsive>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Measurement</th>
-                                <th>Amount</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {(data.ingredients || []).map((item, index) => {
-                                return (
-                                    <tr key={`ingredient-${index}`}>
-                                        <td>{item.name}</td>
-                                        <td>{item.measurement}</td>
-                                        <td>{item.amount}</td>
-                                        <td>
-                                            <Button disabled={data.submitting} size="sm" onClick={launchMutateIngredient(index)} variant="outline-secondary" className="me-1"><>{icons.icon('pencil')}</></Button>
-                                            <Button disabled={data.submitting} size="sm" onClick={launchConfirmationModal(index)} variant="danger"><>{icons.icon('trash')}</></Button>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colSpan={4} className="text-center">
-                                    <Button onClick={launchMutateIngredient()} variant="success">Add Ingredient</Button>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </Table>
+                    <IngredientTable
+                        disabled={data.submitting}
+                        ingredients={data.ingredients}
+                        onMutate={ingredients => setData({...data, ingredients})}
+                    />
                     <CancelButton disabled={data.submitting} className="me-1 mt-3"/>
-                    <Button disabled={data.loading || data.submitting} type="submit" className="mt-3">{data.submitting ? 'Submiting' : 'Submit'}</Button>
+                    <Button disabled={data.loading || data.submitting} type="submit" className="mt-3">{data.submitting ? 'Submitting' : 'Submit'}</Button>
                 </Form>
             </Container>
         </>
