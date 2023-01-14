@@ -5,6 +5,7 @@ import CancelButton from "../../components/common/CancelButton";
 import Header from "../../components/common/Header";
 import { useAlerts } from "../../components/notifications/AlertContext";
 import IngredientTable from "../../components/resource/IngredientTable";
+import NutrientTable from "../../components/resource/NutrientTable";
 import { recipes } from "../../lib/services";
 import { RecipeUpdate } from "../../lib/services/RecipeService";
 
@@ -144,6 +145,13 @@ function RecipeMutate() {
                         disabled={data.submitting}
                         ingredients={data.ingredients}
                         onMutate={ingredients => setData({...data, ingredients})}
+                    />
+                    <h3>Nutrients</h3>
+                    <hr/>
+                    <NutrientTable
+                        disabled={data.submitting}
+                        nutrients={data.nutrients}
+                        onMutate={nutrients => setData({...data, nutrients})}
                     />
                     <CancelButton disabled={data.submitting} className="me-1 mt-3"/>
                     <Button disabled={data.loading || data.submitting} type="submit" className="mt-3">{data.submitting ? 'Submitting' : 'Submit'}</Button>

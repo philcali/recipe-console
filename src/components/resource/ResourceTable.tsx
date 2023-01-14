@@ -13,10 +13,10 @@ interface LoadingItems<T extends TransferObject> extends QueryResults<T> {
     readonly confirmSubmit: boolean;
 }
 
-export interface ResourceTableColumn<T extends TransferObject> {
+export interface ResourceTableColumn<T> {
     readonly label: string;
     readonly center?: boolean;
-    readonly format: (item: T) => string | JSX.Element;
+    readonly format: (item: T, index?:number) => string | JSX.Element;
 }
 
 export interface ResourceTableProps<T extends TransferObject> {
