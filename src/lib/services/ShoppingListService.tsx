@@ -2,10 +2,14 @@ import SessionStorage from "../session/SessionStorage";
 import { BaseService } from "./BaseService";
 import { Ingredient } from "./RecipeService";
 
+export interface ShoppingListItem extends Ingredient {
+    readonly completed: boolean;
+}
+
 export interface ShoppingList {
     readonly listId: string;
-    readonly items: Ingredient[];
-    readonly expiresIn: number;
+    readonly items: ShoppingListItem[];
+    readonly expiresIn?: string;
     readonly name: string;
     readonly createTime: number;
     readonly updateTime: number;
@@ -13,8 +17,8 @@ export interface ShoppingList {
 
 export interface ShoppingListUpdate {
     readonly name?: string;
-    readonly items?: Ingredient[];
-    readonly expiresIn?: number;
+    readonly items?: ShoppingListItem[];
+    readonly expiresIn?: string;
 }
 
 class ShoppingListService extends BaseService<ShoppingList, ShoppingListUpdate> {
