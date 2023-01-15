@@ -1,5 +1,6 @@
 import { Ingredient } from "../../lib/services/RecipeService";
-import ChildResourceTable from "./ChildResourceTable";
+import ChildResourceTable, { FormElement } from "./ChildResourceTable";
+import { ResourceTableColumn } from "./ResourceTable";
 
 const DEFAULT_INGREDIENT: Ingredient = {
     name: '',
@@ -14,41 +15,43 @@ export interface IngredientTableProps {
     readonly ingredients?: Ingredient[];
 }
 
+export const DEFAULT_INGREDIENT_ELEMENTS: FormElement<Ingredient>[] = [
+    {
+        label: 'Measurement',
+        name: 'measurement',
+        onValue: item => item?.measurement,
+        placeholder: 'Measurement'
+    },
+    {
+        label: 'Amount',
+        name: 'amount',
+        onValue: item => item?.amount,
+        type: 'number',
+        min: '0',
+        step: 0.01
+    }
+];
+
+export const DEFAULT_INGREDIENT_COLUMNS: ResourceTableColumn<Ingredient>[] = [
+    {
+        label: 'Measurement',
+        format: item => item.measurement
+    },
+    {
+        label: 'Amount',
+        format: item => item.amount.toString()
+    }
+];
+
 function IngredientTable(props: IngredientTableProps) {
     return (
         <ChildResourceTable
+            {...props}
             label="Ingredient"
             defaultItem={DEFAULT_INGREDIENT}
-            disabled={props.disabled}
-            onMutate={props.onMutate}
             items={props.ingredients}
-            children={props.children}
-            elements={[
-                {
-                    label: 'Measurement',
-                    name: 'measurement',
-                    onValue: item => item?.measurement,
-                    placeholder: 'Measurement'
-                },
-                {
-                    label: 'Amount',
-                    name: 'amount',
-                    onValue: item => item?.amount,
-                    type: 'number',
-                    min: '0',
-                    step: 0.01
-                }
-            ]}
-            columns={[
-                {
-                    label: 'Measurement',
-                    format: item => item.measurement
-                },
-                {
-                    label: 'Amount',
-                    format: item => item.amount.toString()
-                }
-            ]}
+            elements={DEFAULT_INGREDIENT_ELEMENTS}
+            columns={DEFAULT_INGREDIENT_COLUMNS}
         />
     );
 }

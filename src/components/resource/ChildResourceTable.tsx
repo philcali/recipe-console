@@ -60,12 +60,21 @@ function ChildResourceTable<T extends NamedItem>(props: ChildResourceTableProps<
         setData({ ...data, mutateItem: false, confirmation: false, item: undefined });
     }
 
-    const updateItem: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = event => {
+    const updateItem: React.ChangeEventHandler<HTMLInputElement> = event => {
+        let value: string | number | boolean = event.currentTarget.value;
+        switch (event.currentTarget.type) {
+            case 'number':
+                value = parseFloat(value);
+                break;
+            case 'checkbox':
+                value = event.currentTarget.checked;
+                break;
+        }
         setData({
             ...data,
             item: {
                 ...(data.item || props.defaultItem),
-                [event.currentTarget.name]: event.currentTarget.type === 'number' ? parseFloat(event.currentTarget.value) : event.currentTarget.value
+                [event.currentTarget.name]: value
             }
         });
     };
@@ -156,8 +165,15 @@ function ChildResourceTable<T extends NamedItem>(props: ChildResourceTableProps<
                             {props.elements.map((elem, index) => {
                                 return (
                                     <Form.Group key={`elem-${index}`} as={Col} controlId={elem.name}>
-                                        <Form.Label>{elem.label}</Form.Label>
-                                        <Form.Control onChange={updateItem} {...elem} value={elem.onValue(data.item)}/>
+                                        {elem.type === 'switch' &&
+                                            <Form.Switch className="mt-4 pt-3" onChange={updateItem} {...elem} id={elem.name} checked={elem.onValue(data.item) === 'true'}/>
+                                        }
+                                        {elem.type !== 'switch' &&
+                                            <>
+                                                <Form.Label>{elem.label}</Form.Label>
+                                                <Form.Control onChange={updateItem} {...elem} value={elem.onValue(data.item)}/>
+                                            </>
+                                        }
                                     </Form.Group>
                                 )
                             })}

@@ -5,7 +5,7 @@ import CancelButton from "../../components/common/CancelButton";
 import Header from "../../components/common/Header";
 import { icons } from "../../components/common/Icons";
 import { useAlerts } from "../../components/notifications/AlertContext";
-import IngredientTable from "../../components/resource/IngredientTable";
+import ShoppingListItemTable from "../../components/resource/ShoppingListItemTable";
 import { recipes, shoppingLists } from "../../lib/services";
 import { Recipe } from "../../lib/services/RecipeService";
 import { ShoppingListUpdate } from "../../lib/services/ShoppingListService";
@@ -325,23 +325,18 @@ function ShoppingListMutate() {
                     </Row>
                     <h3>Items</h3>
                     <hr/>
-                    <IngredientTable
+                    <ShoppingListItemTable
                         disabled={data.submitting}
-                        ingredients={data.items}
+                        items={data.items}
                         onMutate={items => setData({
                             ...data,
-                            items: items.map(item => {
-                                return {
-                                    ...item,
-                                    completed: false
-                                }
-                            })
+                            items
                         })}
                     >
                         <ImportIngredients
                             onImport={importRecipeIngredients}
                         />
-                    </IngredientTable>
+                    </ShoppingListItemTable>
                     <CancelButton disabled={data.submitting} className="me-1 mt-3"/>
                     <Button disabled={data.loading || data.submitting} type="submit" className="mt-3">{data.submitting ? 'Submitting' : 'Submit'}</Button>
                 </Form>
