@@ -1,5 +1,6 @@
 import { Container } from "react-bootstrap";
 import Header from "../../components/common/Header";
+import { icons } from "../../components/common/Icons";
 import ResourceTable from "../../components/resource/ResourceTable";
 import { recipes } from "../../lib/services";
 import logo from "../../logo192.png";
@@ -25,7 +26,16 @@ function RecipeList() {
                         format: item => item.name
                     },
                     {
-                        label: "Preparation Time (Minutes)",
+                        label: "Type",
+                        center: true,
+                        format: item => {
+                            return (
+                                <>{icons.icon(item.type === 'drink' ? 'cup-straw' : 'box', 25)}</>
+                            );
+                        }
+                    },
+                    {
+                        label: "Prep Time (Min)",
                         center: true,
                         format: item => item.prepareTimeMinutes ? item.prepareTimeMinutes.toString() : 'NA'
                     },

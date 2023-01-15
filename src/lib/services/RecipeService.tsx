@@ -20,6 +20,7 @@ export interface Recipe {
     readonly ingredients: Ingredient[];
     readonly nutrients: Nutrient[];
     readonly thumbnail?: string;
+    readonly type?: string;
     readonly prepareTimeMinutes?: number;
     readonly numberOfServings?: number;
     readonly createTime: number;
@@ -30,6 +31,7 @@ export interface RecipeUpdate {
     readonly name?: string;
     readonly instructions?: string;
     readonly thumbnail?: string;
+    readonly type?: string;
     readonly ingredients?: Ingredient[];
     readonly prepareTimeMinutes?: number;
     readonly numberOfServings?: number;

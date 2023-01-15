@@ -190,7 +190,7 @@ function RecipeMutate() {
         }
     };
 
-    const updateInput: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = event => {
+    const updateInput: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = event => {
         setData({
             ...data,
             [event.currentTarget.name]: event.currentTarget.type === 'number' ? parseInt(event.currentTarget.value) :  event.currentTarget.value
@@ -220,8 +220,17 @@ function RecipeMutate() {
                                 Recipe name is required.
                             </Form.Control.Feedback>
                         </Form.Group>
+                        <Form.Group as={Col} className="mb-3" controlId="type">
+                            <Form.Label>Type</Form.Label>
+                            <Form.Select onChange={updateInput} disabled={data.loading} value={data.type} name="type">
+                                <option value="food">Food</option>
+                                <option value="drink">Drink</option>
+                            </Form.Select>
+                        </Form.Group>
+                    </Row>
+                    <Row>
                         <Form.Group as={Col} className="mb-3" controlId="prepareTimeMinutes">
-                            <Form.Label>Preparation Time (Minutes)</Form.Label>
+                            <Form.Label>Prep Time (Min)</Form.Label>
                             <Form.Control onChange={updateInput} disabled={data.loading} value={data.prepareTimeMinutes} name="prepareTimeMinutes" required min="1" type="number"/>
                             <Form.Control.Feedback type="invalid">
                                 Please enter a valid preparation time.

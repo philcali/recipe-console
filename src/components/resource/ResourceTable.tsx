@@ -168,7 +168,7 @@ function ResourceTable<T extends TransferObject>(props: ResourceTableProps<T>) {
                     <Button disabled={results.confirmSubmit} variant="danger" onClick={deleteItem}>{results.confirmSubmit ? 'Deleting' : 'Delete'}</Button>
                 </Modal.Footer>
             </Modal>
-            <Table responsive>
+            <Table responsive className="text-nowrap">
                 <thead>
                     <tr>
                         {columns.map((column, index) => {
