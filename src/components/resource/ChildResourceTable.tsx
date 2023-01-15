@@ -189,7 +189,7 @@ function ChildResourceTable<T extends NamedItem>(props: ChildResourceTableProps<
                 <thead>
                     <tr>
                         {columns.map((column, ci) => {
-                            return <td className={column.center ? 'text-center' : ''} key={`header-${ci}`}>{column.label}</td>
+                            return <th className={column.center ? 'text-center' : ''} key={`header-${ci}`}>{column.label}</th>
                         })}
                     </tr>
                 </thead>

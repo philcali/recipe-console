@@ -193,7 +193,7 @@ function ResourceTable<T extends TransferObject>(props: ResourceTableProps<T>) {
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colSpan={5} className="text-center">
+                        <td colSpan={columns.length} className="text-center">
                             {footer}
                         </td>
                     </tr>
