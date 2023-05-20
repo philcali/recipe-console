@@ -242,6 +242,8 @@ function ShoppingListMutate() {
                 let date = new Date(updateDoc.expiresIn);
                 date = new Date(date.getTime() + (date.getTimezoneOffset() * 60 * 1000));
                 updateDoc.expiresIn = date.toISOString();
+            } else {
+                delete updateDoc.expiresIn;
             }
             const mutate = listId === undefined || listId === 'new' ?
                 shoppingLists.create(updateDoc) :
