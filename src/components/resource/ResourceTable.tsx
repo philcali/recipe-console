@@ -19,12 +19,17 @@ export interface ResourceTableColumn<T> {
     readonly format: (item: T, index?:number) => string | JSX.Element;
 }
 
+export interface ResourceItemAction<T> {
+    readonly generate: (item: T) => JSX.Element; 
+}
+
 export interface ResourceTableProps<T extends TransferObject> {
     readonly resourceTitle: string;
     readonly resourceId: (item: T) => string;
     readonly resourceLabel: (item?: T) => string;
     readonly service: BaseService<T, any>
     readonly columns: ResourceTableColumn<T>[];
+    readonly actions?: ResourceItemAction<T>[];
 }
 
 function ResourceTable<T extends TransferObject>(props: ResourceTableProps<T>) {
@@ -144,6 +149,7 @@ function ResourceTable<T extends TransferObject>(props: ResourceTableProps<T>) {
             format: (item: T) => {
                 return (
                     <>
+                        {props.actions?.map(action => action.generate(item))}
                         <Button onClick={() => navigate(`/${props.service.resource}/${props.resourceId(item)}`)} variant="outline-secondary" size="sm" className="me-1"><>{icons.icon('pencil')}</></Button>
                         <Button onClick={launchModal(item)} variant="danger" size="sm"><>{icons.icon('trash')}</></Button>
                     </>

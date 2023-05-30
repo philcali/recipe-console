@@ -52,7 +52,7 @@ function Navigation() {
                         </Nav>
                         {auth.isLoggedIn() &&
                             <Nav>
-                                <Nav.Link {...setHrefAndActive("/recipes")}><>{icons.icon('card-checklist')}</> <small>Recipes</small></Nav.Link>
+                                <Nav.Link {...setHrefAndActive("/recipes")}><>{icons.icon('card-list')}</> <small>Recipes</small></Nav.Link>
                                 <Nav.Link {...setHrefAndActive("/lists")}><>{icons.icon('cart')}</> <small>Shopping Lists</small></Nav.Link>
                                 <Nav.Link href={authService.logoutEndpoint(window.location.origin)}><>{icons.icon('box-arrow-left')}</> <small>Log Out</small></Nav.Link>
                             </Nav>

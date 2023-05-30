@@ -1,10 +1,13 @@
-import { Container, } from "react-bootstrap";
+import { Button, Container, } from "react-bootstrap";
 import Header from "../../components/common/Header";
 import ResourceTable from "../../components/resource/ResourceTable";
 import { formatDate } from "../../lib/format";
 import { shoppingLists } from "../../lib/services";
+import { icons } from "../../components/common/Icons";
+import { useNavigate } from "react-router-dom";
 
 function ShoppingLists() {
+    const navigate = useNavigate();
     return (
         <Container>
             <Header>Shopping Lists</Header>
@@ -27,6 +30,18 @@ function ShoppingLists() {
                         label: 'Expires In',
                         center: true,
                         format: item => item.expiresIn ? formatDate(item.expiresIn) : 'NA'
+                    }
+                ]}
+                actions={[
+                    {
+                        generate: item => <Button 
+                            key={`view-${item.listId}`}
+                            onClick={() => navigate(`/lists/${item.listId}/view`)}
+                            variant="outline-secondary"
+                            size="sm"
+                            className="me-1">
+                                <>{icons.icon('card-checklist')}</>
+                            </Button>
                     }
                 ]}
             />
