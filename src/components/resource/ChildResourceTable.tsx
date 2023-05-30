@@ -185,7 +185,7 @@ function ChildResourceTable<T extends NamedItem>(props: ChildResourceTableProps<
                     <Button onClick={submitItem} variant="primary">Submit</Button>
                 </Modal.Footer>
             </Modal>
-            <Table responsive>
+            <Table responsive className="text-nowrap">
                 <thead>
                     <tr>
                         {columns.map((column, ci) => {
