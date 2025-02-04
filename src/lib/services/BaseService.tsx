@@ -32,7 +32,7 @@ export abstract class BaseService<T extends TransferObject, I> {
 
     protected throwOnError(resp: Response): Response {
         if (!resp.ok) {
-            throw new Error(`Response failed ${resp.status}: ${resp.text}`);
+            throw new Error(`Response failed ${resp.status}`);
         }
         return resp;
     }
