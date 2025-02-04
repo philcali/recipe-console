@@ -15,6 +15,8 @@ import RecipeList from './pages/recipes/RecipeList';
 import ShoppingLists from './pages/lists/ShoppingLists';
 import ShoppingListMutate from './pages/lists/ShoppingListMutate';
 import ShoppingListView from './pages/lists/ShoppingListView';
+import TokenList from './pages/settings/TokenLists';
+import TokenMutate from './pages/settings/TokenMutate';
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
               <Route path="/lists" element={<PrivateRoute><ShoppingLists/></PrivateRoute>}/>
               <Route path="/lists/:listId" element={<PrivateRoute><ShoppingListMutate/></PrivateRoute>}/>
               <Route path="/lists/:listId/view" element={<PrivateRoute><ShoppingListView/></PrivateRoute>}/>
+              <Route path="/tokens" element={<PrivateRoute><TokenList/></PrivateRoute>}/>
+              <Route path="/tokens/:tokenId" element={<PrivateRoute><TokenMutate/></PrivateRoute>}/>
               <Route path="/login" element={<Login/>}/>
               <Route path="/logout" element={<Logout/>}/>
             </Routes>
