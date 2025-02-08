@@ -17,6 +17,7 @@ import ShoppingListMutate from './pages/lists/ShoppingListMutate';
 import ShoppingListView from './pages/lists/ShoppingListView';
 import TokenList from './pages/settings/TokenLists';
 import TokenMutate from './pages/settings/TokenMutate';
+import { Privacy } from './pages/Privacy';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Notifications/>
             <Routes>
               <Route path="/" element={<PrivateRoute><Home/></PrivateRoute>}/>
+              <Route path="/privacy" element={<Privacy/>}/>
               <Route path="/dashboard" element={<PrivateRoute><Dashboard/></PrivateRoute>}/>
               <Route path="/recipes" element={<PrivateRoute><RecipeList/></PrivateRoute>}/>
               <Route path="/recipes/:recipeId" element={<PrivateRoute><RecipeMutate/></PrivateRoute>}/>

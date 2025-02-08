@@ -49,6 +49,7 @@ function Navigation() {
                     <Offcanvas.Body className="text-white">
                         <Nav className="me-auto">
                             <Nav.Link {...setHrefAndActive(auth.isLoggedIn() ? '/dashboard' : '/')}>{text}</Nav.Link>
+                            <Nav.Link as={Link} to="/privacy">Privacy</Nav.Link>
                         </Nav>
                         {auth.isLoggedIn() &&
                             <Nav>

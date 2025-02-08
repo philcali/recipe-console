@@ -1,10 +1,11 @@
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { icons } from "../components/common/Icons";
 import { authService } from "../lib/services";
+import buttonContent from '../btn_google_signin_dark_normal_web.png';
 
 function Home() {
     const button = (
-        <Button href={authService.loginEndpoint(window.location.origin)}>Login</Button>
+        <a href={authService.loginEndpoint(window.location.origin)}><img alt="Sign in with Google" src={buttonContent}/></a>
     );
     return (
         <>
