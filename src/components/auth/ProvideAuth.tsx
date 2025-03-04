@@ -6,6 +6,9 @@ import { AuthContext } from "./AuthContext";
 
 export interface User {
     readonly session?: string;
+    readonly username?: string;
+    readonly name?: string;
+    readonly email?: string;
     readonly loading: boolean;
 }
 
