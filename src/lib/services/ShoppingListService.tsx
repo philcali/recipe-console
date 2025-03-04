@@ -11,6 +11,7 @@ export interface ShoppingList {
     readonly items: ShoppingListItem[];
     readonly expiresIn?: string;
     readonly name: string;
+    readonly owner?: string;
     readonly createTime: number;
     readonly updateTime: number;
 }
