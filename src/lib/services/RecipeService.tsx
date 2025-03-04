@@ -32,6 +32,7 @@ export interface RecipeUpdate {
     readonly instructions?: string;
     readonly thumbnail?: string;
     readonly type?: string;
+    readonly owner?: string;
     readonly ingredients?: Ingredient[];
     readonly prepareTimeMinutes?: number;
     readonly numberOfServings?: number;

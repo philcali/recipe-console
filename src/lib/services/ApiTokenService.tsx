@@ -6,6 +6,12 @@ export enum Scope {
     RECIPE_WRITE = "recipes",
     LIST_READ = "lists.readonly",
     LIST_WRITE = "lists",
+    SETTINGS_READ = "settings.readonly",
+    SETTINGS_WRITE = "settings",
+    AUDIT_READ = "audits.readonly",
+    AUDIT_WRITE = "audits",
+    SHARES_READ = "shares.readonly",
+    SHARES_WRITE = "shares",
 }
 
 export interface ApiToken {

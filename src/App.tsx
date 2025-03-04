@@ -15,8 +15,12 @@ import RecipeList from './pages/recipes/RecipeList';
 import ShoppingLists from './pages/lists/ShoppingLists';
 import ShoppingListMutate from './pages/lists/ShoppingListMutate';
 import ShoppingListView from './pages/lists/ShoppingListView';
-import TokenList from './pages/settings/TokenLists';
-import TokenMutate from './pages/settings/TokenMutate';
+import TokenList from './pages/tokens/TokenLists';
+import TokenMutate from './pages/tokens/TokenMutate';
+import SettingsMutate from './pages/settings/SettingMutate';
+import AuditList from './pages/audits/AuditList';
+import ShareList from './pages/shares/ShareList';
+import ShareMutate from './pages/shares/ShareMutate';
 import { Privacy } from './pages/Privacy';
 
 function App() {
@@ -38,6 +42,10 @@ function App() {
               <Route path="/lists/:listId/view" element={<PrivateRoute><ShoppingListView/></PrivateRoute>}/>
               <Route path="/tokens" element={<PrivateRoute><TokenList/></PrivateRoute>}/>
               <Route path="/tokens/:tokenId" element={<PrivateRoute><TokenMutate/></PrivateRoute>}/>
+              <Route path="/settings" element={<PrivateRoute><SettingsMutate/></PrivateRoute>}/>
+              <Route path="/audits" element={<PrivateRoute><AuditList/></PrivateRoute>}/>
+              <Route path="/shares" element={<PrivateRoute><ShareList/></PrivateRoute>}/>
+              <Route path="/shares/:shareId" element={<PrivateRoute><ShareMutate/></PrivateRoute>}/>
               <Route path="/login" element={<Login/>}/>
               <Route path="/logout" element={<Logout/>}/>
             </Routes>

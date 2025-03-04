@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { Button, Modal, Spinner, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { formatDate, formatTime } from "../../lib/format";
-import { BaseService, QueryResults, TransferObject } from "../../lib/services/BaseService";
 import { icons } from "../common/Icons";
 import { useAlerts } from "../notifications/AlertContext";
+import { QueryParams, QueryResults, ReadOnlyService, TransferObject } from "../../lib/services/ReadOnlyService";
+import { BaseService } from "../../lib/services/BaseService";
 
 interface LoadingItems<T extends TransferObject> extends QueryResults<T> {
     readonly loading: boolean;
@@ -27,7 +28,14 @@ export interface ResourceTableProps<T extends TransferObject> {
     readonly resourceTitle: string;
     readonly resourceId: (item: T) => string;
     readonly resourceLabel: (item?: T) => string;
-    readonly service: BaseService<T, any>
+    readonly pagingLimit?: number;
+    readonly manuallyPage?: boolean;
+    readonly creatable?: boolean;
+    readonly editable?: boolean;
+    readonly loadMore?: (results: LoadingItems<T>) => void;
+    readonly sortOrder?: string;
+    readonly service: ReadOnlyService<T>
+    readonly additionalParams?: QueryParams;
     readonly columns: ResourceTableColumn<T>[];
     readonly actions?: ResourceItemAction<T>[];
 }
@@ -46,14 +54,18 @@ function ResourceTable<T extends TransferObject>(props: ResourceTableProps<T>) {
     useEffect(() => {
         let isMounted = true;
         if (results.loading) {
-            props.service.list({ nextToken: results.nextToken })
+            props.service.list({ ...props.additionalParams, nextToken: results.nextToken, limit: props.pagingLimit ?? 100, sortOrder: props.sortOrder })
                 .then(ls => {
                     if (isMounted) {
+                        let loading = (ls.nextToken !== undefined && ls.nextToken !== null);
+                        if (loading && props.manuallyPage === true) {
+                            loading = false;
+                        }
                         setResults({
                             ...results,
                             items: results.items.concat(ls.items),
                             nextToken: ls.nextToken,
-                            loading: (ls.nextToken !== undefined && ls.nextToken !== null)
+                            loading,
                         });
                     }
                 })
@@ -83,7 +95,15 @@ function ResourceTable<T extends TransferObject>(props: ResourceTableProps<T>) {
     } else {
         footer = (
             <>
-                <Button onClick={_ => navigate(`/${props.service.resource}/new`)} variant="success">Create {props.resourceTitle}</Button>
+                {(results.nextToken || props.loadMore) &&
+                    <Button className="me-2" variant="outline-secondary" onClick={() => (props.loadMore ?? setResults)({
+                        ...results,
+                        loading: true,
+                    })}>Load More</Button>
+                }
+                {props.service instanceof BaseService && (props.creatable === undefined || props.creatable) &&
+                    <Button onClick={_ => navigate(`/${props.service.resource}/new`)} variant="success">Create {props.resourceTitle}</Button>
+                }
             </>
         )
     }
@@ -150,7 +170,9 @@ function ResourceTable<T extends TransferObject>(props: ResourceTableProps<T>) {
                 return (
                     <>
                         {props.actions?.map(action => action.generate(item))}
-                        <Button onClick={() => navigate(`/${props.service.resource}/${props.resourceId(item)}`)} variant="outline-secondary" size="sm" className="me-1"><>{icons.icon('pencil')}</></Button>
+                        {props.service instanceof BaseService && (props.editable === undefined || props.editable === true) &&
+                            <Button onClick={() => navigate(`/${props.service.resource}/${props.resourceId(item)}`)} variant="outline-secondary" size="sm" className="me-1"><>{icons.icon('pencil')}</></Button>
+                        }
                         <Button onClick={launchModal(item)} variant="danger" size="sm"><>{icons.icon('trash')}</></Button>
                     </>
                 );
@@ -183,6 +205,11 @@ function ResourceTable<T extends TransferObject>(props: ResourceTableProps<T>) {
                     </tr>
                 </thead>
                 <tbody>
+                    {results.loading === false && results.items.length === 0 &&
+                        <tr>
+                            <td className="text-center" colSpan={columns.length}>No {props.resourceTitle}s found.</td>
+                        </tr>
+                    }
                     {results.items.map((item, index) => {
                         return (
                             <tr key={`${props.service.resource}-item${index}`}>
@@ -197,13 +224,15 @@ function ResourceTable<T extends TransferObject>(props: ResourceTableProps<T>) {
                         )
                     })}
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <td colSpan={columns.length} className="text-center">
-                            {footer}
-                        </td>
-                    </tr>
-                </tfoot>
+                {footer &&
+                    <tfoot>
+                        <tr>
+                            <td colSpan={columns.length} className="text-center">
+                                {footer}
+                            </td>
+                        </tr>
+                    </tfoot>
+                }
             </Table>
         </>
     );

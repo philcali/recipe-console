@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
-import { Card, Col, Container, Row, Spinner } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/common/Header";
 import { useAlerts } from "../components/notifications/AlertContext";
-import { recipes, shoppingLists } from "../lib/services";
-import { BaseService, TransferObject } from "../lib/services/BaseService";
+import { auditService, recipes, shoppingLists } from "../lib/services";
+import { ReadOnlyService, TransferObject } from "../lib/services/ReadOnlyService";
+import ResourceTable from "../components/resource/ResourceTable";
+import { icons } from "../components/common/Icons";
 
 interface ResourceCardProps<T extends TransferObject> {
     readonly title: string;
-    readonly service: BaseService<T, any>;
+    readonly service: ReadOnlyService<T>;
 }
 
 interface ResourceCardData<T extends TransferObject> {
@@ -69,15 +71,82 @@ function ResourceCard<T extends TransferObject>(props: ResourceCardProps<T>) {
 }
 
 function Dashboard() {
+    const navigate = useNavigate();
     return (
         <Container>
             <Header>Dashboard</Header>
-            <Row>
+            <Row className="mt-3">
                 <Col>
                     <ResourceCard title="Recipes" service={recipes}/>
                 </Col>
                 <Col>
                     <ResourceCard title="Shopping Lists" service={shoppingLists}/>
+                </Col>
+            </Row>
+            <Row className="mt-3">
+                <Col>
+                    <Card>
+                        <Card.Header className="text-center" as={"h4"}>Activity</Card.Header>
+                        <Card.Body>
+                            <ResourceTable
+                                service={auditService}
+                                resourceId={item => item.id}
+                                resourceLabel={item => `${item?.resourceType} Activity Log`}
+                                resourceTitle="Activity Log"
+                                pagingLimit={5}
+                                manuallyPage={false}
+                                sortOrder="descending"
+                                loadMore={() => navigate('/audits')}
+                                columns={[
+                                    {
+                                        label: 'Message',
+                                        center: true,
+                                        format: item => `${item.resourceType} was ${item.action.toLowerCase()}.`
+                                    },
+                                ]}
+                                actions={[
+                                    {
+                                        generate(item) {
+                                            let iconString = '';
+                                            let resourceType = '';
+                                            switch (item.resourceType) {
+                                                case 'Settings':
+                                                    iconString = 'gear';
+                                                    resourceType = 'settings';
+                                                    break;
+                                                case 'ShoppingList':
+                                                    iconString = 'cart';
+                                                    resourceType = 'lists'
+                                                    break;
+                                                case 'Recipe':
+                                                    iconString = 'card-list';
+                                                    resourceType = 'recipes';
+                                                    break;
+                                                case 'ShareRequest':
+                                                    iconString = 'share';
+                                                    resourceType = 'shares';
+                                                    break;
+                                                case 'ApiToken':
+                                                    iconString = 'code-slash';
+                                                    resourceType = 'tokens';
+                                                    break;
+                                            }
+                                            return (
+                                                <Button
+                                                    size="sm"
+                                                    className="me-1"
+                                                    variant="outline-secondary"
+                                                    onClick={() => navigate(`/${resourceType}`)}
+                                                >
+                                                    <>{icons.icon(iconString)}</>
+                                                </Button>
+                                            )
+                                        },
+                                    }
+                                ]}
+                            />
+                        </Card.Body>
+                    </Card>
                 </Col>
             </Row>
         </Container>
