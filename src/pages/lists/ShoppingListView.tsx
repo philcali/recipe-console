@@ -1,4 +1,4 @@
-import { Breadcrumb, Container, Form, Table } from "react-bootstrap";
+import { Badge, Breadcrumb, Container, Form, Table } from "react-bootstrap";
 import Header from "../../components/common/Header";
 import { useEffect, useState } from "react";
 import { ShoppingList, ShoppingListItem } from "../../lib/services/ShoppingListService";
@@ -133,7 +133,7 @@ function ShoppingListView() {
         <>
             <ShoppingListBreadcrumb listId={listId || 'NA'} listName={data.list?.name || 'Loading...'}/>
             <Container>
-                <Header>{data.list ? data.list.name : 'Loading...'}</Header>
+                <Header>{data.list ? data.list.name : 'Loading...'} <Badge>{data.list?.owner ?? 'Self'}</Badge></Header>
                 <Table responsive className="text-nowrap">
                     <thead>
                         <tr>

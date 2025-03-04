@@ -6,6 +6,7 @@ import { ApprovalStatus, ShareRequest, ShareRequestUpdate } from "../../lib/serv
 import { icons } from "../../components/common/Icons";
 import { useEffect, useState } from "react";
 import { useAlerts } from "../../components/notifications/AlertContext";
+import { useAuth } from "../../components/auth/AuthContext";
 
 function formatStatus(item: ShareRequest) {
     let variant: string;
@@ -36,6 +37,7 @@ function ShareList() {
     };
     const [ state, setState ] = useState(defaultItem);
     const alerts = useAlerts();
+    const auth = useAuth();
     useEffect(() => {
         let isMounted = true;
         if (state.submitting) {
@@ -146,8 +148,8 @@ function ShareList() {
                             resourceTitle="Share Request"
                             columns={[
                                 {
-                                    label: 'Approver',
-                                    format: item => item.approver
+                                    label: 'Owner',
+                                    format: item => auth.user.email === item.requester ? item.approver : item.requester
                                 },
                                 {
                                     label: 'Status',

@@ -1,4 +1,4 @@
-import { Button, Container, } from "react-bootstrap";
+import { Badge, Button, Container, } from "react-bootstrap";
 import Header from "../../components/common/Header";
 import ResourceTable from "../../components/resource/ResourceTable";
 import { formatDate } from "../../lib/format";
@@ -20,6 +20,10 @@ function ShoppingLists() {
                     {
                         label: 'Name',
                         format: item => item.name
+                    },
+                    {
+                        label: 'Owner',
+                        format: item => <Badge>{item.owner ?? 'Self'}</Badge>
                     },
                     {
                         label: 'Items',
