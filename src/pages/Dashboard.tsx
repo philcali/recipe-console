@@ -94,7 +94,7 @@ function Dashboard() {
                                 resourceLabel={item => `${item?.resourceType} Activity Log`}
                                 resourceTitle="Activity Log"
                                 pagingLimit={5}
-                                manuallyPage={false}
+                                manuallyPage={true}
                                 sortOrder="descending"
                                 loadMore={() => navigate('/audits')}
                                 columns={[
