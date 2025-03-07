@@ -9,6 +9,7 @@ export interface User {
     readonly username?: string;
     readonly name?: string;
     readonly email?: string;
+    readonly picture?: string;
     readonly loading: boolean;
 }
 
