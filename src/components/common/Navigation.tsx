@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Nav, Navbar, Offcanvas } from "react-bootstrap";
+import { Container, Image, Nav, Navbar, Offcanvas } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import { authService } from "../../lib/services";
 import logo from '../../logo.svg';
@@ -25,13 +25,25 @@ function Navigation() {
         <Navbar onToggle={setExpanded} expanded={expanded} expand="lg" bg="dark" variant="dark" sticky="top">
             <Container fluid>
                 <Navbar.Brand as={Link} to="/">
-                    <img
-                        src={logo}
-                        width="40"
-                        height="40"
-                        className="d-inline-block align-top"
-                        alt="Recipes"
-                    />
+                    {auth.isLoggedIn() &&
+                        <Image
+                            src={auth.user.picture}
+                            width="40"
+                            height="40"
+                            className="d-inline-block align-top"
+                            alt={auth.user.name}
+                            roundedCircle
+                        />
+                    }
+                    {!auth.isLoggedIn() &&
+                        <img
+                            src={logo}
+                            width="40"
+                            height="40"
+                            className="d-inline-block align-top"
+                            alt="Bible"
+                        />
+                    }
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
                 <Navbar.Offcanvas className="bg-dark" id="responsive-navbar-nav" placement="end">
